@@ -35,11 +35,11 @@ export default class SideSwipe extends Component<CarouselProps, State> {
     data: [],
     extractKey: (item: *, index: number) => `sideswipe-carousel-item-${index}`,
     itemWidth: screenWidth,
-    onEndReached: () => {},
+    onEndReached: () => { },
     onEndReachedThreshold: 0.9,
-    onGestureStart: () => {},
-    onGestureRelease: () => {},
-    onIndexChange: () => {},
+    onGestureStart: () => { },
+    onGestureRelease: () => { },
+    onIndexChange: () => { },
     renderItem: () => null,
     shouldCapture: ({ dx }: GestureState) => (dx * dx) > 1,
     shouldRelease: () => false,
@@ -135,10 +135,13 @@ export default class SideSwipe extends Component<CarouselProps, State> {
           onEndReached={this.props.onEndReached}
           onEndReachedThreshold={this.props.onEndReachedThreshold}
           scrollEventThrottle={1}
-          onScroll={Animated.event(
-            [{ nativeEvent: { contentOffset: { x: scrollPosAnim } } }],
-            { useNativeDriver: this.props.useNativeDriver }
-          )}
+          onScroll={() => {
+            this.props.onScroll();
+            Animated.event(
+              [{ nativeEvent: { contentOffset: { x: scrollPosAnim } } }],
+              { useNativeDriver: this.props.useNativeDriver }
+            )
+          }}
           renderItem={({ item, index }) =>
             renderItem({
               item,
@@ -192,7 +195,7 @@ export default class SideSwipe extends Component<CarouselProps, State> {
     const resolvedIndex: number = Math.round(
       (resolvedOffset +
         (dx > 0 ? -this.props.threshold : this.props.threshold)) /
-        this.props.itemWidth
+      this.props.itemWidth
     );
 
     let newIndex: number;
@@ -205,9 +208,9 @@ export default class SideSwipe extends Component<CarouselProps, State> {
         dx > 0
           ? Math.max(resolvedIndex - velocityDifference, 0)
           : Math.min(
-              resolvedIndex + velocityDifference,
-              this.props.data.length - 1
-            );
+            resolvedIndex + velocityDifference,
+            this.props.data.length - 1
+          );
     } else {
       newIndex =
         dx > 0
